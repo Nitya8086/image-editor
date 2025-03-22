@@ -1,0 +1,147 @@
+.search-container {
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 20px;
+
+    ;
+
+}
+
+.title {
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 24px;
+
+}
+.userDetails{
+display: flex;
+flex-direction: column;
+
+
+}
+.user-info {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.user-info label {
+    font-weight: bold;
+}
+
+.user-info input {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+
+.search-box {
+    display: flex;
+
+
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.search-input {
+    padding: 10px;
+    width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.search-button {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.search-button:hover {
+    background-color: #0056b3;
+}
+
+/* Image Grid */
+.image-grid {
+
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 2fr);
+    gap: 15px;
+
+}
+
+.image-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: white;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+
+}
+
+.image {
+    width: 100%;
+    height: auto;
+    max-height: 150px;
+    object-fit: fill;
+}
+
+.add-caption-btn {
+    margin-top: 10px;
+    padding: 5px 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.add-caption-btn:hover {
+    background-color: #218838;
+}
+
+.skeleton {
+    background-color: #e0e0e0;
+    border-radius: 8px;
+    width: 100%;
+    height: 200px;
+    animation: pulse 1.5s infinite;
+    margin: 10px; 
+}
+
+
+@keyframes pulse {
+    0% {
+        opacity: 0.7;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.7;
+    }
+}
+.no-results-card {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px;
+    background-color: #f8f8f8;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    color: #444;
+}
+
+.no-results-card h2 {
+    margin-bottom: 10px;
+    font-size: 24px;
+    color: #ff5252;
+}
