@@ -39,6 +39,33 @@ const EditPage = () => {
         return () => fabricCanvas.dispose();
     }, [imageUrl]);
 
+    const addDeleteControl = (object) => {
+        object.hasControls = true;
+        object.cornerStyle = 'circle';
+        object.cornerColor = 'red';
+        object.controls.deleteControl = new fabric.Control({
+            x: 0.5,
+            y: -0.5,
+            offsetY: -10,
+            offsetX: 10,
+            cursorStyle: 'pointer',
+            render: (ctx, left, top) => {
+                ctx.fillStyle = 'red';
+                ctx.beginPath();
+                ctx.arc(left, top, 8, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = 'white';
+                ctx.font = '10px Arial';
+                ctx.fillText('X', left - 3, top + 3);
+            },
+            mouseUpHandler: (eventData, transform) => {
+                const target = transform.target;
+                canvas.remove(target);
+                canvas.renderAll();
+            }
+        });
+    };
+
     const addText = () => {
         if (!canvas || !caption.trim()) return;
 
@@ -49,11 +76,9 @@ const EditPage = () => {
             fill: 'black',
             fontWeight: 'bold',
             editable: true,
-            lockScalingX: false,
-            lockScalingY: false,
-            hasControls: true,
         });
 
+        addDeleteControl(text);
         canvas.add(text);
         canvas.setActiveObject(text);
         canvas.renderAll();
@@ -83,13 +108,7 @@ const EditPage = () => {
                 return;
         }
 
-        newShape.set({
-            lockScalingX: false,
-            lockScalingY: false,
-            hasControls: true,
-            selectable: true,
-        });
-
+        addDeleteControl(newShape);
         canvas.add(newShape);
         canvas.setActiveObject(newShape);
         canvas.renderAll();
