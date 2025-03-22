@@ -14,7 +14,7 @@ const SearchPage = () => {
   const handleSearch = async () => {
     if (!query) return;
     setLoading(true);
-    setHasSearched(true); // mark search as performed
+    setHasSearched(true); 
     const results = await fetchImages(query);
     setImages(results);
     setLoading(false);

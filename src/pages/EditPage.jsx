@@ -10,35 +10,34 @@ const EditPage = () => {
     const location = useLocation();
     const imageUrl = location.state?.imageUrl;
 
+    useEffect(() => {
+        if (!imageUrl) return;
 
-useEffect(() => {
-    if (!imageUrl) return;
-
-    const fabricCanvas = new fabric.Canvas(canvasRef.current, {
-        width: 600,
-        height: 400
-    });
-
-    const imgElement = new Image();
-    imgElement.crossOrigin = 'anonymous';
-    imgElement.src = imageUrl;
-
-    imgElement.onload = () => {
-        const imgInstance = new fabric.Image(imgElement, {
-            scaleX: 500 / imgElement.width,
-            scaleY: 300 / imgElement.height,
-            left: (fabricCanvas.width - 500) / 2,
-            top: (fabricCanvas.height - 300) / 2,
-            selectable: false
+        const fabricCanvas = new fabric.Canvas(canvasRef.current, {
+            width: 600,
+            height: 400,
+            selection: true,
         });
 
-        fabricCanvas.setBackgroundImage(imgInstance, fabricCanvas.renderAll.bind(fabricCanvas));
-        setCanvas(fabricCanvas);
-    };
+        const imgElement = new Image();
+        imgElement.crossOrigin = 'anonymous';
+        imgElement.src = imageUrl;
 
-    return () => fabricCanvas.dispose();
-}, [imageUrl]);
+        imgElement.onload = () => {
+            const imgInstance = new fabric.Image(imgElement, {
+                scaleX: 500 / imgElement.width,
+                scaleY: 300 / imgElement.height,
+                left: (fabricCanvas.width - 500) / 2,
+                top: (fabricCanvas.height - 300) / 2,
+                selectable: false
+            });
 
+            fabricCanvas.setBackgroundImage(imgInstance, fabricCanvas.renderAll.bind(fabricCanvas));
+            setCanvas(fabricCanvas);
+        };
+
+        return () => fabricCanvas.dispose();
+    }, [imageUrl]);
 
     const addText = () => {
         if (!canvas || !caption.trim()) return;
@@ -49,19 +48,22 @@ useEffect(() => {
             fontSize: 20,
             fill: 'black',
             fontWeight: 'bold',
-            editable: true
+            editable: true,
+            lockScalingX: false,
+            lockScalingY: false,
+            hasControls: true,
         });
 
         canvas.add(text);
         canvas.setActiveObject(text);
         canvas.renderAll();
-
         setCaption("");
     };
 
     const addShape = (shape) => {
         if (!canvas) return;
         let newShape;
+        
         switch (shape) {
             case 'circle':
                 newShape = new fabric.Circle({ radius: 30, fill: 'red', left: 100, top: 100 });
@@ -72,21 +74,29 @@ useEffect(() => {
             case 'triangle':
                 newShape = new fabric.Triangle({ width: 60, height: 60, fill: 'green', left: 200, top: 200 });
                 break;
-            default: return;
+            case 'polygon':
+                newShape = new fabric.Polygon([
+                    { x: 50, y: 0 }, { x: 100, y: 50 }, { x: 75, y: 100 }, { x: 25, y: 100 }, { x: 0, y: 50 }
+                ], { fill: 'purple', left: 250, top: 250 });
+                break;
+            default:
+                return;
         }
+
+        newShape.set({
+            lockScalingX: false,
+            lockScalingY: false,
+            hasControls: true,
+            selectable: true,
+        });
+
         canvas.add(newShape);
+        canvas.setActiveObject(newShape);
         canvas.renderAll();
     };
 
     const downloadImage = () => {
         if (!canvas) return;
-
-        const background = canvas.backgroundImage;
-        if (background) {
-            canvas.setBackgroundImage(background, canvas.renderAll.bind(canvas), {
-                crossOrigin: 'anonymous'
-            });
-        }
 
         try {
             const dataURL = canvas.toDataURL({
@@ -108,10 +118,9 @@ useEffect(() => {
         }
     };
 
-
     return (
         <div className="edit-container">
-            <h1 className="title">Add Caption Page</h1>
+            <h1 className="title">Add Caption & Shapes</h1>
             <div className="edit-content">
                 <div className="canvas-container">
                     <canvas ref={canvasRef} width={600} height={400}></canvas>
@@ -127,6 +136,7 @@ useEffect(() => {
                     <button onClick={() => addShape('circle')}>Add Circle</button>
                     <button onClick={() => addShape('rectangle')}>Add Rectangle</button>
                     <button onClick={() => addShape('triangle')}>Add Triangle</button>
+                    <button onClick={() => addShape('polygon')}>Add Polygon</button>
                     <button className="download-btn" onClick={downloadImage}>Download</button>
                 </div>
             </div>
